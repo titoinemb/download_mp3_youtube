@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . spamapp --platform=win32 --arch=x64 --out=dist --overwrite --icon=icons/icon.ico"
+    "package": "electron-packager . download_mp3_youtube --platform=win32 --arch=x64 --out=dist --overwrite --icon=icons/icon.ico"
   },
   "keywords": [],
   "author": "",
