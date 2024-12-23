@@ -16,13 +16,13 @@ function createWindow () {
       nodeIntegration: true,
       contextIsolation: false,
       sandbox: false,
-    //   devTools: false
+      devTools: false
     }
   });
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.webContents.on('did-finish-load', () => { mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => { callback({ responseHeaders: { ...details.responseHeaders, 'Content-Security-Policy': ['default-src \'self\' \'unsafe-inline\' data: https://*'], } }); }); });
 

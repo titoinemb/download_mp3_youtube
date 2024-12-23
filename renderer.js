@@ -99,6 +99,9 @@ document.getElementById('menu1-button').addEventListener('click', () => {
               if (!err) {
                 deleteFile(url_file, () => {
                   // metadata(__dirname+"\\download\\"+extractedFile.split('\\').pop().replace('.mp3', '').trim()+".mp3", url);
+                  if(ll == 0) {
+                    document.getElementById("load").style.display = "none";
+                  };
                 });
               };
             });
