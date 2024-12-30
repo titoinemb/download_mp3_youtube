@@ -6,7 +6,6 @@ window.addEventListener('DOMContentLoaded', () => {
     icon: "./icon.png",
     menu: null
   });
-
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector);
     if (element) element.innerText = text;

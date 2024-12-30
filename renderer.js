@@ -6,8 +6,8 @@ const iconv = require('iconv-lite');
 const axios = require('axios');
 const puppeteer = require('puppeteer');
 
-function download(url, callback) {
-  let command = `${__dirname}\\bin\\yt-dlp.exe -x --audio-format mp3 -o "${__dirname}\\dwn-tmp\\%(title)s.%(ext)s" "${url}"`;
+function download(url, title, callback) {
+  let command = `${__dirname}\\bin\\yt-dlp.exe -x --audio-format mp3 -o "${__dirname}\\dwn-tmp\\${title}.%(ext)s" "${url}"`;
 
   exec(command, { encoding: 'buffer' }, (err, stdout, stderr) => {
     if (err) {
@@ -46,20 +46,24 @@ function deleteFile(url, callback) {
   });
 };
 
-function metadata(file, url) {
-  axios.get("https://www.youtube.com/oembed?format=json&url=" + url)
-  .then(response => {
+async function metadata(file, url) {
+  try {
+    const response = await axios.get("https://www.youtube.com/oembed?format=json&url=" + url);
     let data = response.data;
+    
+    let mp3Buffer = fs.readFileSync(file);
 
-    NodeID3.write({
+    let tags = {
       title: data.title,
       artist: data.author_name,
       album: data.author_name,
       year: new Date().getFullYear(),
-    });
+    };
 
-    console.log(data);
-  });
+    NodeID3.write(tags, mp3Buffer);
+  } catch (error) {
+    
+  };
 };
 
 async function getYtInitialData(playlistUrl) {
@@ -117,47 +121,70 @@ document.getElementById('menu1-button').addEventListener('click', () => {
     });
   };
 
+  
 
-  setTimeout(() => {
-    var ll = list.length - 1;
-    for (i = 0; i <= ll; i++) {
-      if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(list[i])) {
-        let url = list[i];
-        download(url, (err, result) => {
-          console.log(result)
-          if (!err) {
-            axios.get('https://www.youtube.com/oembed?format=json&url=' + url)
-              .then(response => {
-                let url_file = `${__dirname}\\dwn-tmp\\${response.data.title}.mp3`;
-                let final_url = `${__dirname}\\download\\${response.data.title}.mp3`
+
+  setTimeout(() => {    
+    async function processUrl(url) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await axios.get('https://www.youtube.com/oembed?format=json&url=' + url);
+          const title = response.data.title.replace(/[<>:"/\\|?*]/g, '');
+          const url_file = path.join(__dirname, 'dwn-tmp', `${title}.mp3`);
+          const final_url = path.join(__dirname, 'download', `${title}.mp3`);
+          
+          download(url, title, async (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              console.log(result);
+              
+              try {
                 if (fs.existsSync(final_url)) {
                   deleteFile(final_url);
                 };
-                convert(url_file, (err) => {
-                  if (!err) {
-                    deleteFile(url_file, () => {
-                      // metadata(final_url, url);
-                      if (ll == 0) {
-                        document.getElementById("load").style.display = "none";
-                      };
-                      if (i == list.length) {
-                        document.getElementById("load").style.display = "none";
-                      };
-                    });
-                  };
+                
+                await new Promise((resolve, reject) => {
+                  convert(url_file, (err) => {
+                    if (!err) {
+                      deleteFile(url_file, resolve);
+                      metadata(final_url, url)
+                    } else {
+                      reject(err);
+                    }
+                  });;
                 });
-              });
+                
+                resolve();
+              } catch (error) {
+                reject(error);
+              };
+            };
+          });
+        } catch (error) {
+          reject(error);
+        };
+      });
+    };
+    
+    async function processList(list) {
+      for (let i = 0; i <= list.length - 1; i++) {
+        const url = list[i];
+        if (/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/.test(url)) {
+          try {
+            await processUrl(url);
+          } catch (error) {
+            console.error(error);
           };
-        });
-      } else {
-        if (ll == 0) {
+        };
+        
+        if (i === list.length - 1) {
           document.getElementById("load").style.display = "none";
         };
       };
-      if (i == list.length) {
-        document.getElementById("load").style.display = "none";
-      };
     };
+
+    processList(list);
   }, 10000);
 });
 
