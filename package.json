@@ -1,6 +1,6 @@
 {
   "name": "download_mp3_youtube",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "index.js",
   "description": "This application allows you to install playlists as well as a list of videos/playlists of music from YouTube",
   "scripts": {
@@ -8,7 +8,7 @@
     "package": "electron-packager . download_mp3_youtube --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico"
   },
   "keywords": [],
-  "author": "",
+  "author": "titoinemb",
   "license": "ISC",
   "devDependencies": {
     "electron": "^33.2.0",

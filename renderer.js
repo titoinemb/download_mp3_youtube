@@ -85,6 +85,17 @@ async function getYtInitialData(playlistUrl) {
   };
 };
 
+function transformUrls(urls) {
+  return urls.map(url => {
+    const urlParams = new URLSearchParams(url.split('?')[1]);
+    const listId = urlParams.get('list');
+    if (listId && url.startsWith('https://www.youtube.com/watch?v=')) {
+      return `https://www.youtube.com/playlist?list=${listId}`;
+    };
+    return url;
+  });
+};
+
 function removeYouTubePlaylistUrls(url) { 
   const regex = /^https:\/\/www\.youtube\.com\/playlist\?list=/; 
   return url.filter(url => !regex.test(url));
@@ -92,7 +103,8 @@ function removeYouTubePlaylistUrls(url) {
 
 document.getElementById('menu1-button').addEventListener('click', () => {
   document.getElementById("load").style.display = "block";
-  const list1 = document.getElementById('menu1-text').value.split('\n');
+  const list1 = transformUrls(document.getElementById('menu1-text').value.split('\n'));
+  console.log(list1)
   const list = removeYouTubePlaylistUrls(list1);
 
   function getYouTubePlaylistUrls(urls) {
