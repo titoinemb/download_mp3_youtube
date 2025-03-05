@@ -2,6 +2,11 @@ const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 // require('electron-reload')(__dirname);
+const { autoUpdater } = require('electron-updater');
+
+app.on('ready', () => {
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 setupTitlebar();
 
@@ -10,16 +15,16 @@ function createWindow () {
     width: 800,
     height: 600,
     frame: false,
-    icon: "./icon.png",
+    icon: "./src/icon.png",
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'src/preload.js'),
       nodeIntegration: true,
       contextIsolation: false,
       sandbox: false,
       devTools: false
     }
   });
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile('src/index.html');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
