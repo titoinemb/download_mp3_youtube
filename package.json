@@ -5,7 +5,7 @@
   "description": "This application allows you to install playlists as well as a list of videos/playlists of music from YouTube",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . download_mp3_youtube --platform=win32 --arch=x64 --out=dist --overwrite --icon=icon.ico"
+    "package": "electron-packager . download_mp3_youtube --platform=win32 --arch=x64 --out=dist --overwrite --icon=src/icon.ico"
   },
   "keywords": [],
   "author": "titoinemb",
@@ -13,8 +13,7 @@
   "devDependencies": {
     "electron": "^33.2.0",
     "electron-packager": "^17.1.2",
-    "electron-reload": "^2.0.0-alpha.1",
-    "electron-updater": "^6.3.9"
+    "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
     "axios": "^1.7.9",
@@ -24,7 +23,8 @@
     "iconv-lite": "^0.6.3",
     "node-fetch": "^3.3.2",
     "node-id3": "^0.2.6",
-    "puppeteer": "^23.11.1"
+    "puppeteer": "^23.11.1",
+    "electron-updater": "^6.3.9"
   },
   "build": {
     "appId": "com.app.downloadmp3",

@@ -2,7 +2,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const { Titlebar } = require("custom-electron-titlebar");
 
   new Titlebar({
-    backgroundColor: 'rgb(172, 22, 22)',
+    backgroundColor: '#76ADFF',
     icon: "./icon.png",
     menu: null
   });

@@ -1,7 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
-// require('electron-reload')(__dirname);
 const { autoUpdater } = require('electron-updater');
 
 app.on('ready', () => {
