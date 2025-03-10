@@ -16,7 +16,7 @@
     "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "child_process": "^1.0.2",
     "custom-electron-titlebar": "^4.2.8",
     "express": "^4.21.2",
